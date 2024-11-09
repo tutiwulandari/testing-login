@@ -9,6 +9,9 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.Assert;
 
+import java.io.File;
+import java.net.URL;
+
 class AutomateLoginTest {
 
     public static final String LINK_WEB = "https://the-internet.herokuapp.com/login";
@@ -19,13 +22,20 @@ class AutomateLoginTest {
         String archName = System.getProperty("os.arch");
         var isMac = osName != null && osName.toLowerCase().contains("mac");
         var isSiliconChip = archName != null && archName.equals("aarch64");
-        if(isMac && isSiliconChip){
+        if (isMac && isSiliconChip) {
             System.setProperty("webdriver.chrome.driver", "/opt/homebrew/bin/chromedriver");
         } else {
-            System.setProperty("webdriver.chrome.driver", "src/test/java/chromedriver");
+            URL resource = AutomateLoginTest.class.getClassLoader().getResource("chromedriver");
+            if (resource != null) {
+                File driverPath = new File(resource.getFile());
+                System.setProperty("webdriver.chrome.driver", driverPath.getAbsolutePath());
+            } else {
+                System.out.println("Chromedriver not found in resources!");
+            }
         }
 
     }
+
     @Test
     void LoginFailed() {
 //        System.setProperty("webdriver.chrome.driver", "src/test/java/chromedriver");
