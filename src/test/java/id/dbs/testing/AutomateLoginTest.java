@@ -1,5 +1,6 @@
 package id.dbs.testing;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -32,9 +33,9 @@ class AutomateLoginTest {
         ChromeOptions options = new ChromeOptions();
         WebDriver driver = new ChromeDriver(options);
         driver.get(LINK_WEB);
-        WebElement username =driver.findElement(By.id("username"));
-        WebElement pass =driver.findElement(By.id("password"));
-        WebElement btnLogin =driver.findElement(By.className("radius"));
+        WebElement username = driver.findElement(By.id("username"));
+        WebElement pass = driver.findElement(By.id("password"));
+        WebElement btnLogin = driver.findElement(By.className("radius"));
         username.sendKeys("toms");
         pass.sendKeys("SuperSecretPassword!");
         btnLogin.click();
@@ -49,6 +50,7 @@ class AutomateLoginTest {
         driver.quit();
 
     }
+
     @Test
     void LoginSuccess() {
         ChromeOptions options = new ChromeOptions();
@@ -56,16 +58,15 @@ class AutomateLoginTest {
         driver.get(LINK_WEB);
         String actualLink = driver.getCurrentUrl();
         Assert.assertEquals(actualLink, LINK_WEB);
-        WebElement username =driver.findElement(By.id("username"));
-        WebElement pass =driver.findElement(By.id("password"));
-        WebElement btnLogin =driver.findElement(By.className("radius"));
+        WebElement username = driver.findElement(By.id("username"));
+        WebElement pass = driver.findElement(By.id("password"));
+        WebElement btnLogin = driver.findElement(By.className("radius"));
         username.sendKeys("tomsmith");
         pass.sendKeys("SuperSecretPassword!");
         btnLogin.click();
         driver.quit();
 
     }
-
 
 
 }
