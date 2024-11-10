@@ -1,5 +1,6 @@
-package id.dbs.testing;
+package id.dbs.testing.login;
 
+import id.dbs.testing.BaseTest;
 import id.dbs.testing.page.LoginPage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
