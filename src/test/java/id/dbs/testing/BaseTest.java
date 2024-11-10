@@ -22,7 +22,19 @@ public class BaseTest {
         if (isMac && isSiliconChip) {
             System.setProperty("webdriver.chrome.driver", "/opt/homebrew/bin/chromedriver");
         } else {
-            URL resource = BaseTest.class.getClassLoader().getResource("chromedriver");
+            var resourceName = "chromedriver";
+            var isWindows = osName != null && osName.toLowerCase().contains("windows");
+            var arch64 = archName != null && archName.toLowerCase().contains("64");
+            if (isWindows && arch64) {
+                resourceName = "chromedriver_win_64.exe";
+            } else if (isWindows) {
+                resourceName = "chromedriver_win_32.exe";
+            } else if (isMac) {
+                resourceName = "chromedriver_mac_x64";
+            } else {
+                resourceName = "chromedriver_linux_64";
+            }
+            URL resource = BaseTest.class.getClassLoader().getResource(resourceName);
             if (resource != null) {
                 File driverPath = new File(resource.getFile());
                 System.setProperty("webdriver.chrome.driver", driverPath.getAbsolutePath());

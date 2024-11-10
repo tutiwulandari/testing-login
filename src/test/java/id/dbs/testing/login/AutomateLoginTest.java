@@ -14,7 +14,7 @@ class AutomateLoginTest extends BaseTest {
     private static final String LINK_WEB = "https://the-internet.herokuapp.com/login";
 
     @Test
-    void LoginFailed() throws InterruptedException {
+    void LoginFailed()  {
         driver.get(LINK_WEB);
 
         LoginPage loginPage = new LoginPage(driver);
@@ -32,7 +32,7 @@ class AutomateLoginTest extends BaseTest {
     }
 
     @Test
-    void LoginSuccess() throws InterruptedException {
+    void LoginSuccess() {
         driver.get(LINK_WEB);
 
         LoginPage loginPage = new LoginPage(driver);
