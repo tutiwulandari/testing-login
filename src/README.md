@@ -20,7 +20,7 @@ This project contains automated tests for verifying login functionality on [Hero
 
 - **Java**: Ensure Java 17 or higher is installed.
 - **Maven**: Required to build and run the project.
-- **ChromeDriver**: The correct version of ChromeDriver is needed for your Chrome version. WebDriverManager is used here to handle this dependency automatically.
+- **Browser Chrome**: The browser chrome should be version 130
 
 ## Project Setup
 
