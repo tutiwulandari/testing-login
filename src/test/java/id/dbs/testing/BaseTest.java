@@ -19,28 +19,27 @@ public class BaseTest {
         var isMac = osName != null && osName.toLowerCase().contains("mac");
         var isSiliconChip = archName != null && archName.equals("aarch64");
 
-        if (isMac && isSiliconChip) {
-            System.setProperty("webdriver.chrome.driver", "/opt/homebrew/bin/chromedriver");
+        var resourceName = "chromedriver";
+        var isWindows = osName != null && osName.toLowerCase().contains("windows");
+        var arch64 = archName != null && archName.toLowerCase().contains("64");
+        if (isWindows && arch64) {
+            resourceName = "chromedriver_win_64.exe";
+        } else if(isMac && isSiliconChip) {
+            resourceName = "chromedriver_arm_64";
+        }else if (isWindows) {
+            resourceName = "chromedriver_win_32.exe";
+        } else if (isMac) {
+            resourceName = "chromedriver_mac_x64";
         } else {
-            var resourceName = "chromedriver";
-            var isWindows = osName != null && osName.toLowerCase().contains("windows");
-            var arch64 = archName != null && archName.toLowerCase().contains("64");
-            if (isWindows && arch64) {
-                resourceName = "chromedriver_win_64.exe";
-            } else if (isWindows) {
-                resourceName = "chromedriver_win_32.exe";
-            } else if (isMac) {
-                resourceName = "chromedriver_mac_x64";
-            } else {
-                resourceName = "chromedriver_linux_64";
-            }
-            URL resource = BaseTest.class.getClassLoader().getResource(resourceName);
-            if (resource != null) {
-                File driverPath = new File(resource.getFile());
-                System.setProperty("webdriver.chrome.driver", driverPath.getAbsolutePath());
-            } else {
-                System.out.println("Chromedriver not found in resources!");
-            }
+            resourceName = "chromedriver_linux_64";
+        }
+        URL resource = BaseTest.class.getClassLoader().getResource(resourceName);
+        if (resource != null) {
+            File driverPath = new File(resource.getFile());
+            driverPath.setExecutable(true);
+            System.setProperty("webdriver.chrome.driver", driverPath.getAbsolutePath());
+        } else {
+            System.out.println("Chromedriver not found in resources!");
         }
 
         driver = new ChromeDriver();
