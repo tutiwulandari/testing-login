@@ -1,80 +1,59 @@
 package id.dbs.testing;
 
-import org.junit.jupiter.api.BeforeEach;
+import id.dbs.testing.page.LoginPage;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.testng.Assert;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.File;
-import java.net.URL;
 
-class AutomateLoginTest {
+class AutomateLoginTest extends BaseTest {
+    private static final String LINK_WEB = "https://the-internet.herokuapp.com/login";
 
-    public static final String LINK_WEB = "https://the-internet.herokuapp.com/login";
+    @Test
+    void LoginFailed() throws InterruptedException {
+        driver.get(LINK_WEB);
 
-    @BeforeEach
-    public void setup() {
-        String osName = System.getProperty("os.name");
-        String archName = System.getProperty("os.arch");
-        var isMac = osName != null && osName.toLowerCase().contains("mac");
-        var isSiliconChip = archName != null && archName.equals("aarch64");
-        if (isMac && isSiliconChip) {
-            System.setProperty("webdriver.chrome.driver", "/opt/homebrew/bin/chromedriver");
-        } else {
-            URL resource = AutomateLoginTest.class.getClassLoader().getResource("chromedriver");
-            if (resource != null) {
-                File driverPath = new File(resource.getFile());
-                System.setProperty("webdriver.chrome.driver", driverPath.getAbsolutePath());
-            } else {
-                System.out.println("Chromedriver not found in resources!");
-            }
-        }
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.enterUsername("toms");
+        loginPage.enterPassword("SuperSecretPassword!");
+        loginPage.clickLoginButton();
+        Thread.sleep(3000);
 
+        // Use WebDriverWait to wait for error message
+        // to handle some delay from API
+//        WebDriverWait wait = new WebDriverWait(driver, 10);
+//        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("flash")));
+
+        String actualErrorMessage = loginPage.getErrorMessage();
+        Assertions.assertEquals("Your username is invalid!\n×", actualErrorMessage);
     }
 
     @Test
-    void LoginFailed() {
-//        System.setProperty("webdriver.chrome.driver", "src/test/java/chromedriver");
-        ChromeOptions options = new ChromeOptions();
-        WebDriver driver = new ChromeDriver(options);
+    void LoginSuccess() throws InterruptedException {
         driver.get(LINK_WEB);
-        WebElement username = driver.findElement(By.id("username"));
-        WebElement pass = driver.findElement(By.id("password"));
-        WebElement btnLogin = driver.findElement(By.className("radius"));
-        username.sendKeys("toms");
-        pass.sendKeys("SuperSecretPassword!");
-        btnLogin.click();
-        WebElement lblError = driver.findElement(By.id("flash"));
-        //verify
-        String actualText = lblError.getText();
-        String expText = "Your username is invalid!\n" +
-                "×";
-        System.out.println("act " + actualText);
-        System.out.println(expText);
-        Assert.assertEquals(actualText, expText);
-        driver.quit();
 
-    }
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.enterUsername("tomsmith");
+        loginPage.enterPassword("SuperSecretPassword!");
+        loginPage.clickLoginButton();
 
-    @Test
-    void LoginSuccess() {
-        ChromeOptions options = new ChromeOptions();
-        WebDriver driver = new ChromeDriver(options);
-        driver.get(LINK_WEB);
-        String actualLink = driver.getCurrentUrl();
-        Assert.assertEquals(actualLink, LINK_WEB);
-        WebElement username = driver.findElement(By.id("username"));
-        WebElement pass = driver.findElement(By.id("password"));
-        WebElement btnLogin = driver.findElement(By.className("radius"));
-        username.sendKeys("tomsmith");
-        pass.sendKeys("SuperSecretPassword!");
-        btnLogin.click();
-        driver.quit();
+        // Wait for success message
+//        WebDriverWait wait = new WebDriverWait(driver, 10);
+//        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("flash")));
+        Thread.sleep(10);
 
+        // Verify success message
+        WebElement lblSuccess = driver.findElement(By.id("flash"));
+        String actualText = lblSuccess.getText();
+        String expectedText = "You logged into a secure area!\n×";
+        Assertions.assertEquals(expectedText, actualText);
+
+        // Verify the URL after successful login
+        String redirectUrl = driver.getCurrentUrl();
+        Assertions.assertEquals("https://the-internet.herokuapp.com/secure", redirectUrl);
     }
 
 
