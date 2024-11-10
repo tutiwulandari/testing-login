@@ -21,12 +21,11 @@ class AutomateLoginTest extends BaseTest {
         loginPage.enterUsername("toms");
         loginPage.enterPassword("SuperSecretPassword!");
         loginPage.clickLoginButton();
-        Thread.sleep(3000);
 
         // Use WebDriverWait to wait for error message
         // to handle some delay from API
-//        WebDriverWait wait = new WebDriverWait(driver, 10);
-//        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("flash")));
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("flash")));
 
         String actualErrorMessage = loginPage.getErrorMessage();
         Assertions.assertEquals("Your username is invalid!\n×", actualErrorMessage);
@@ -42,9 +41,8 @@ class AutomateLoginTest extends BaseTest {
         loginPage.clickLoginButton();
 
         // Wait for success message
-//        WebDriverWait wait = new WebDriverWait(driver, 10);
-//        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("flash")));
-        Thread.sleep(10);
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("flash")));
 
         // Verify success message
         WebElement lblSuccess = driver.findElement(By.id("flash"));
